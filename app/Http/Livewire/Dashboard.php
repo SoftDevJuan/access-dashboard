@@ -44,6 +44,14 @@ class Dashboard extends Component
             $labels[] = (string)$i;
         }
 
+        $maxAccesses = max($accessCounts);
+        $hourWithMostAccesses = array_search($maxAccesses, $accessCounts);
+
+        $this->emit('updateStats', [
+            'hourWithMostAccesses' => $hourWithMostAccesses,
+            'maxAccesses' => $maxAccesses
+        ]);
+
         return [
             'labels' => $labels,
             'data' => array_values($accessCounts),

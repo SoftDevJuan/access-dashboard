@@ -35,9 +35,8 @@
             @endforeach
           </div>
           <div class="row mt-4">
-              <div class="col-lg-2 col-md-3 mt-4 mb-4">
-              </div>
-              <div class="col-lg-8 col-md-6 mt-4 mb-4">
+            
+              <div class="col-lg-8 col-md-8 mt-4 mb-4 pt-0">
                   <div class="card z-index-2  ">
                       <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
                           <div class="bg-gradient-success shadow-success border-radius-lg py-3 pe-1">
@@ -59,7 +58,28 @@
                       </div>
                   </div>
               </div>
-              <div class="col-lg-2 col-md-3 mt-4 mb-3">
+              <div class="col-lg-4 col-md-4 mt-4 mb-3 ps-5">
+                <div class="card">
+                    <div class="card-header mx-4 p-3 text-center">
+                        <div class="icon icon-shape icon-lg bg-gradient-warning shadow text-center border-radius-lg">
+                            <i class="fa fa-fw fa-hashtag"></i>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0 p-3 text-center">
+                        <hr class="horizontal dark my-3">
+                        <h5 id="max-access-hour" class="mb-0">-</h5>
+                    </div>
+              </div>
+              <div class="card mt-4">
+                    <div class="card-header mx-4 p-3 text-center">
+                        <div class="icon icon-shape icon-lg bg-gradient-primary shadow text-center border-radius-lg">
+                            <i class="fa fa-fw fa-hashtag"></i>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0 p-3 text-center">
+                        <hr class="horizontal dark my-3">
+                        <h5 id="max-accesses" class="mb-0">-</h5>
+                    </div>
               </div>
           </div>
       </div>
@@ -179,6 +199,11 @@
                         },
                     },
                 });
+            });
+            
+            Livewire.on('updateStats', data => {
+                document.getElementById('max-access-hour').innerText = `Hora Con Más Accesos: ${data.hourWithMostAccesses}`;
+                document.getElementById('max-accesses').innerText = `Cantidad Total De Accesos: ${data.maxAccesses}`;
             });
 
             @this.on('updatedSelectedDoor', () => {
