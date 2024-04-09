@@ -5,6 +5,7 @@ use App\Http\Livewire\Auth\Register;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Dashboard;
 use App\Http\Livewire\ExampleLaravel\UserManagement;
+use App\Http\Livewire\ExampleLaravel\DoorManagement;
 use App\Http\Livewire\Tables;
 use GuzzleHttp\Middleware;
 
@@ -26,5 +27,6 @@ Route::get('/', function(){
 Route::get('sign-up', Register::class)->name('register');
 Route::get('sign-in', Login::class)->name('login');
 Route::get('user-management', UserManagement::class)->name('user-management');
+Route::get('door-management', DoorManagement::class)->name('door-management');
 Route::get('dashboard', Dashboard::class)->name('dashboard');
 Route::get('tables', Tables::class)->name('tables');
