@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
 
 class Tables extends Component
 {
@@ -18,6 +19,11 @@ class Tables extends Component
         ]);
 
         $this->movimientos = json_decode($response->body());
+
+        foreach ($this->movimientos as $movimiento) {
+            $date = Carbon::parse($movimiento->fecha);
+            $movimiento->fecha = $date->tz('America/Mexico_City')->format('Y-m-d H:i:s');
+        }
 
         return view('livewire.tables');
     }

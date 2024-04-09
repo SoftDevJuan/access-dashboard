@@ -14,7 +14,7 @@
                                 <i class="fa fa-fw fa-door-open" aria-hidden="true"></i>
                             </div>
                             <div class="text-end pt-1">
-                                <h4 class="mb-0">Puerta {{ $loop->index + 1 }}</h4>
+                                <h4 class="mb-0">Puerta {{ $door->numero }}</h4>
                             </div>
                         </div>
                         <hr class="dark horizontal my-0">
@@ -35,9 +35,9 @@
             @endforeach
           </div>
           <div class="row mt-4">
-              <div class="col-lg-4 col-md-6 mt-4 mb-4">
+              <div class="col-lg-2 col-md-3 mt-4 mb-4">
               </div>
-              <div class="col-lg-4 col-md-6 mt-4 mb-4">
+              <div class="col-lg-8 col-md-6 mt-4 mb-4">
                   <div class="card z-index-2  ">
                       <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
                           <div class="bg-gradient-success shadow-success border-radius-lg py-3 pe-1">
@@ -52,14 +52,14 @@
                                 <option selected value=""></option>
                                 @foreach ($doors as $door)
                                 @if(isset($door->status))
-                                <option value="{{ $door->_id }}">Puerta {{ $loop->index + 1 }}</option>
+                                <option value="{{ $door->numero }}">Puerta {{ $door->numero }}</option>
                                 @endif
                                 @endforeach
                             </select>
                       </div>
                   </div>
               </div>
-              <div class="col-lg-4 mt-4 mb-3">
+              <div class="col-lg-2 col-md-3 mt-4 mb-3">
               </div>
           </div>
       </div>

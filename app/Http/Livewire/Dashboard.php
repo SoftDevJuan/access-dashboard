@@ -4,27 +4,49 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
 
 
 class Dashboard extends Component
 {   
     public $doors;
-    public $selectedDoor;    
+    public $selectedDoor;
+    public $moves;
     public $chartData = [];
 
-    public function updatedSelectedDoor($doorId)
+    public function updatedSelectedDoor($doorNumber)
     {
-       $this->chartData = $this->getChartDataForDoor($doorId);
+       $this->chartData = $this->getChartDataForDoor($doorNumber);
        $this->emit('chartDataUpdated', $this->chartData);
     }
 
-    private function getChartDataForDoor($doorId)
+    private function getChartDataForDoor($doorNumber)
     {
-        // traer aqui los datos desde la api de RFIDS para cambiar el array de data   
+        $host = env("MOBILE_API_HOST", "http://localhost:3000");
+        $responseMoves = Http::get($host . '/api/getMovimientos', [
+            "emailAdmin" => session('userAdmin')->email
+        ]);
+        $this->moves = json_decode($responseMoves->body());
         
+        $filteredMoves = collect($this->moves)->where('puerta', $doorNumber);
+        $accessCounts = array_fill(1, 24, 0); // Inicializa un array del 1 al 8 con el valor 0
+        
+        foreach ($filteredMoves as $move) {
+            $hour = Carbon::parse($move->fecha)->tz('America/Mexico_City')->hour;
+
+            if ($hour >= 1 && $hour <= 24) {
+                $accessCounts[$hour]++;
+            }
+        }
+
+        $labels = [];
+        for ($i = 1; $i <= 24; $i++) {
+            $labels[] = (string)$i;
+        }
+
         return [
-            'labels' => ["1", "2", "3", "4", "5", "6", "7", "8"],
-            'data' => [20, 16, 330, 4, 5, 6, 7, 8],
+            'labels' => $labels,
+            'data' => array_values($accessCounts),
         ];
     }
 
