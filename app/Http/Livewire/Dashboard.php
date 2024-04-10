@@ -67,13 +67,17 @@ class Dashboard extends Component
         
         if (!empty($door)) {
             $door = reset($door);
-            $status = $door->status ? false : true;
+            if($door->alarma == "false"){
+                $alarma = "true";
+            }else{$alarma = "false";} 
 
-            $response = Http::put($host . "/api/puertas/{$doorId}", [
-                'status' => $status,
-                'alarma' => $door->alarma,
-                'activacion' => $door->activacion
-            ]);
+            $data = [
+                '_id' => $doorId,
+                'alarma' => $alarma
+            ];
+            
+            $response = Http::put($host . "/api/puertasDispositivos/",$data);
+                
         }
 
         $this->emit('doorToggled');

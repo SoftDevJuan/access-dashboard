@@ -30,7 +30,7 @@ class Login extends Component
     
     public function store()
     {
-        $host = env("MOBILE_API_HOST", "https://react-iot-application.onrender.com/");
+        $host = env("MOBILE_API_HOST", "https://react-iot-application.onrender.com");
 
         $responseUsersAdmin = Http::get($host . "/api/getUsuaioAdmin");
         // Probar con esta api en lugar de la anterior:
