@@ -25,7 +25,7 @@
                                         class="form-check-input"
                                         type="checkbox"
                                         wire:click="toggleDoorStatus('{{ $door->_id }}')"
-                                        @if($door->status) checked @endif
+                                        @if($door->alarma === "false") checked @endif
                                     >
                                 </div>
                         </div>
@@ -97,6 +97,7 @@
                 if (chart) {
                     chart.destroy();
                 }
+                
 
                 chart = new Chart(ctx, {
                     type: 'line',
@@ -209,7 +210,11 @@
             @this.on('updatedSelectedDoor', () => {
                 @this.call('updatedSelectedDoor', @this.selectedDoor);
             });
+            @this.on('updatedDoors', () => {
+                @this.call('updatedDoors');
+            });
         });
+        
 
   </script>
   @endpush

@@ -14,12 +14,23 @@ class Dashboard extends Component
     public $moves;
     public $chartData = [];
 
+
+
+    ////////////////////////////////////////////////////////////
     public function updatedSelectedDoor($doorNumber)
     {
        $this->chartData = $this->getChartDataForDoor($doorNumber);
        $this->emit('chartDataUpdated', $this->chartData);
     }
+////////////////////////////////////////////////////////////////////
 
+    public function updatedDoors()
+    {
+    $this->chartData = $this->getChartDataForAll();
+    $this->emit('chartDataUpdate', $this->chartData);
+    }
+
+    //////////////////////////////////////////////////////////
     private function getChartDataForDoor($doorNumber)
     {
         $host = env("MOBILE_API_HOST", "http://localhost:3000");
@@ -57,7 +68,49 @@ class Dashboard extends Component
             'data' => array_values($accessCounts),
         ];
     }
+///////////////////////////////////////////////////////////////////////////
 
+private function getChartDataForAll()
+{
+    $host = env("MOBILE_API_HOST", "http://localhost:3000");
+    $responseMoves = Http::get($host . '/api/getMovimientos', [
+        "emailAdmin" => session('userAdmin')->email
+    ]);
+    $this->moves = json_decode($responseMoves->body());
+    
+    $accessCounts = array_fill(1, 24, 0); // Inicializa un array del 1 al 8 con el valor 0
+    
+    foreach ($this->moves as $move) {
+        $hour = Carbon::parse($move->fecha)->tz('America/Mexico_City')->hour;
+
+        if ($hour >= 1 && $hour <= 24) {
+            $accessCounts[$hour]++;
+        }
+    }
+
+    $labels = [];
+    for ($i = 1; $i <= 24; $i++) {
+        $labels[] = (string)$i;
+    }
+
+    $maxAccesses = max($accessCounts);
+    $hourWithMostAccesses = array_search($maxAccesses, $accessCounts);
+
+    $this->emit('updateStats', [
+        'hourWithMostAccesses' => $hourWithMostAccesses,
+        'maxAccesses' => $maxAccesses
+    ]);
+
+    return [
+        'labels' => $labels,
+        'data' => array_values($accessCounts),
+    ];
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////
     public function toggleDoorStatus($doorId)
     {
         $host = env("MOBILE_API_HOST", "http://localhost:3000");
