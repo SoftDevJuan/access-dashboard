@@ -136,6 +136,10 @@ private function getChartDataForAll()
         $this->emit('doorToggled');
     }
     
+
+
+
+    //////////////////////////////////////////////////////////////////////////
     public function hydrate()
     {
         $host = env("MOBILE_API_HOST", "http://localhost:3000");
@@ -147,6 +151,9 @@ private function getChartDataForAll()
         $this->doors = json_decode($responseDoors->body());
     }
 
+
+
+    //////////////////////////////////////////////////////////////////////////
     public function render()
     {
         $host = env("MOBILE_API_HOST", "http://localhost:3000");
