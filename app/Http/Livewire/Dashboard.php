@@ -19,6 +19,10 @@ class Dashboard extends Component
     ////////////////////////////////////////////////////////////
     public function updatedSelectedDoor($doorNumber)
     {
+        if(!$doorNumber){
+            $this->chartData = $this->getChartDataForAll();
+       $this->emit('chartDataUpdatedAll', $this->chartData);
+        }
        $this->chartData = $this->getChartDataForDoor($doorNumber);
        $this->emit('chartDataUpdated', $this->chartData);
     }
@@ -27,12 +31,15 @@ class Dashboard extends Component
     public function updatedDoors()
     {
     $this->chartData = $this->getChartDataForAll();
-    $this->emit('chartDataUpdate', $this->chartData);
+    $this->emit('chartDataUpdatedAll', $this->chartData);
     }
 
     //////////////////////////////////////////////////////////
     private function getChartDataForDoor($doorNumber)
     {
+
+        
+
         $host = env("MOBILE_API_HOST", "http://localhost:3000");
         $responseMoves = Http::get($host . '/api/getMovimientos', [
             "emailAdmin" => session('userAdmin')->email
@@ -68,6 +75,7 @@ class Dashboard extends Component
             'data' => array_values($accessCounts),
         ];
     }
+    
 ///////////////////////////////////////////////////////////////////////////
 
 private function getChartDataForAll()
@@ -77,10 +85,11 @@ private function getChartDataForAll()
         "emailAdmin" => session('userAdmin')->email
     ]);
     $this->moves = json_decode($responseMoves->body());
-    
+    $filteredMoves = collect($this->moves)->where('emailAdmin',  session('userAdmin')->email);
+
     $accessCounts = array_fill(1, 24, 0); // Inicializa un array del 1 al 8 con el valor 0
     
-    foreach ($this->moves as $move) {
+    foreach ($filteredMoves as $move) {
         $hour = Carbon::parse($move->fecha)->tz('America/Mexico_City')->hour;
 
         if ($hour >= 1 && $hour <= 24) {

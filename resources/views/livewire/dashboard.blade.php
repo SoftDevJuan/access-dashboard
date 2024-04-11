@@ -1,6 +1,7 @@
 <div>
       <!-- Navbar -->
       <!-- End Navbar -->
+      
       <div class="container-fluid py-4">
           <div class="row pl-2">
             @foreach ($doors as $door)
@@ -89,131 +90,143 @@
   <script src="{{ asset('assets') }}/js/plugins/chartjs.min.js"></script>
   <script>
 
-        document.addEventListener('livewire:load', function () {
-            var ctx = document.getElementById('chart-line').getContext('2d');
-            var chart;
+document.addEventListener('livewire:load' || 'load', function () {
+    var ctx = document.getElementById('chart-line').getContext('2d');
+    var chart;
 
-            Livewire.on('chartDataUpdated', data => {
-                if (chart) {
-                    chart.destroy();
-                }
-                
+    function createChart(data) {
+        if (chart) {
+            chart.destroy();
+        }
 
-                chart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                            labels: data.labels,
-                            datasets: [{
-                                label: "doors data",
-                                data: data.data,
-                                tension: 0,
-                                borderWidth: 0,
-                                pointRadius: 5,
-                                pointBackgroundColor: "rgba(255, 255, 255, .8)",
-                                pointBorderColor: "transparent",
-                                borderColor: "rgba(255, 255, 255, .8)",
-                                borderColor: "rgba(255, 255, 255, .8)",
-                                borderWidth: 4,
-                                backgroundColor: "transparent",
-                                fill: true,
-                                maxBarThickness: 6,
-                            }],
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: "doors data",
+                    data: data.data,
+                    tension: 0,
+                    borderWidth: 0,
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(255, 255, 255, .8)",
+                    pointBorderColor: "transparent",
+                    borderColor: "rgba(255, 255, 255, .8)",
+                    borderWidth: 4,
+                    backgroundColor: "transparent",
+                    fill: true,
+                    maxBarThickness: 6,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [5, 5],
+                            color: 'rgba(255, 255, 255, .2)'
                         },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false,
-                            }
-                        },
-                        interaction: {
-                            intersect: false,
-                            mode: 'index',
-                        },
-                        scales: {
-                            y: {
-                                grid: {
-                                    drawBorder: false,
-                                    display: true,
-                                    drawOnChartArea: true,
-                                    drawTicks: false,
-                                    borderDash: [5, 5],
-                                    color: 'rgba(255, 255, 255, .2)'
-                                },
-                                ticks: {
-                                    display: true,
-                                    color: '#f8f9fa',
-                                    padding: 10,
-                                    font: {
-                                        size: 14,
-                                        weight: 300,
-                                        family: "Roboto",
-                                        style: 'normal',
-                                        lineHeight: 2
-                                    },
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Cantidad Personal',
-                                    color: '#f8f9fa',
-                                    font: {
-                                        size: 16,
-                                        weight: 'bold',
-                                        family: "Roboto",
-                                        style: 'normal',
-                                    },
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    drawBorder: false,
-                                    display: false,
-                                    drawOnChartArea: false,
-                                    drawTicks: false,
-                                    borderDash: [5, 5]
-                                },
-                                ticks: {
-                                    display: true,
-                                    color: '#f8f9fa',
-                                    padding: 10,
-                                    font: {
-                                        size: 14,
-                                        weight: 300,
-                                        family: "Roboto",
-                                        style: 'normal',
-                                        lineHeight: 2
-                                    },
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Hora',
-                                    color: '#f8f9fa',
-                                    font: {
-                                        size: 16,
-                                        weight: 'bold',
-                                        family: "Roboto",
-                                        style: 'normal',
-                                    },
-                                }
+                        ticks: {
+                            display: true,
+                            color: '#f8f9fa',
+                            padding: 10,
+                            font: {
+                                size: 14,
+                                weight: 300,
+                                family: "Roboto",
+                                style: 'normal',
+                                lineHeight: 2
                             },
                         },
+                        title: {
+                            display: true,
+                            text: 'Cantidad Personal',
+                            color: '#f8f9fa',
+                            font: {
+                                size: 16,
+                                weight: 'bold',
+                                family: "Roboto",
+                                style: 'normal',
+                            },
+                        }
                     },
-                });
-            });
-            
-            Livewire.on('updateStats', data => {
-                document.getElementById('max-access-hour').innerText = `Hora Con Más Accesos: ${data.hourWithMostAccesses}`;
-                document.getElementById('max-accesses').innerText = `Cantidad Total De Accesos: ${data.maxAccesses}`;
-            });
-
-            @this.on('updatedSelectedDoor', () => {
-                @this.call('updatedSelectedDoor', @this.selectedDoor);
-            });
-            @this.on('updatedDoors', () => {
-                @this.call('updatedDoors');
-            });
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: false,
+                            drawOnChartArea: false,
+                            drawTicks: false,
+                            borderDash: [5, 5]
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#f8f9fa',
+                            padding: 10,
+                            font: {
+                                size: 14,
+                                weight: 300,
+                                family: "Roboto",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                        },
+                        title: {
+                            display: true,
+                            text: 'Hora',
+                            color: '#f8f9fa',
+                            font: {
+                                size: 16,
+                                weight: 'bold',
+                                family: "Roboto",
+                                style: 'normal',
+                            },
+                        }
+                    },
+                },
+            },
         });
+    }
+
+    Livewire.on('chartDataUpdated', data => {
+        createChart(data);
+    });
+
+    Livewire.on('chartDataUpdatedAll', data => {
+        createChart(data);
+    });
+
+    Livewire.on('updateStats', data => {
+        document.getElementById('max-access-hour').innerText = `Hora Con Más Accesos: ${data.hourWithMostAccesses}`;
+        document.getElementById('max-accesses').innerText = `Cantidad Total De Accesos: ${data.maxAccesses}`;
+    });
+
+    this.on('updatedSelectedDoor', () => {
+       this.call('updatedSelectedDoor', this.selectedDoor);
+    });
+
+    this.on('updatedDoors', () => {
+        this.call('updatedDoors');
+    });
+});
+
+
+/////////////////////////////////////////////////////////////
+
+
         
 
   </script>
